@@ -26,12 +26,10 @@ This project demonstrates the practical application of Computer Science theory i
 | :--- | :--- | :--- | :--- |
 | **Maintenance** | **Priority Queue** (Bubble Sort) | $O(n^2)$ | Prioritizes tasks based on urgency (Critical \> Low). Uses a manual Bubble Sort algorithm with a FIFO tie-breaker based on timestamp. |
 | **Room Service** | **Min-Heap** | $O(1)$ access | Ensures the oldest order is always at the root (top) to be served first. Implements a manual `heapify_up` algorithm. |
-| **Waitlist** | **Queue** (FIFO) | $O(1)$ | Strictly First-In, First-Out management for overbooking or restaurant waiting lines. |
 | **Housekeeping** | **Linked List** | $O(n)$ | Generates a sequential route (Head $\to$ Next $\to$ Tail) for cleaning staff, allowing dynamic node removal when a room is cleaned. |
 | **Guest Lookup** | **Hash Map** | $O(1)$ avg | Direct access to guest data via Room Number using a custom Hash Function (ASCII sum modulo table size). |
 | **Guest Search** | **String Search** (Naive) | $O(n \cdot m)$ | Brute-force string matching algorithm to find guest history by name without using SQL `LIKE`. |
 | **Do Not Disturb** | **Set** | $O(1)$ | Ensures uniqueness. A room cannot be added twice to the DND list; it either exists in the set or it doesn't. |
-| **Key Drop** | **Stack** (LIFO) | $O(1)$ | (Optional) Simulates a key card drop-box where the last key dropped is the first one processed. |
 
 -----
 
