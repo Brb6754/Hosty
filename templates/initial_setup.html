@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración Inicial del Hotel | Setup</title>
+    <link rel="stylesheet" href="{% static 'css/initial_setup.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <h1> Configuración Inicial</h1>
+        <p class="description">Ingrese la información básica para inicializar el sistema de gestión hotelera.</p>
+
+        <form method="post" class="setup-form">
+            {% csrf_token %}
+
+            <section class="form-section">
+                <h3>1. Datos Generales del Hotel</h3>
+                {% for field in config_form %}
+                <div class="form-group">{{ field.label_tag }}{{ field }}{% for error in field.errors %}<p
+                        class="errorlist">{{ error }}</p>{% endfor %}</div>
+                {% endfor %}
+            </section>
+
+            <section class="form-section" id="room-types-container">
+                <div class="section-header">
+                    <h3>2. Tipos de Habitación</h3>
+                    <button type="button" class="add-btn"
+                        onclick="cloneFormSection('room-types-container', 'room-type-fields', 'Tipo de Habitación')"
+                        title="Añadir">+</button>
+                </div>
+
+                <div class="room-type-fields form-clonable-section" data-form-prefix="room_type">
+                    <div class="clonable-header" onclick="toggleClonableContent(this)">
+                        <h4 class="clonable-title">Tipo de Habitación 1</h4>
+                        <div class="clonable-header-controls">
+                            <button type="button" class="clonable-toggle">▼</button>
+                        </div>
+                    </div>
+                    <div class="clonable-content">
+                        {% for field in room_form %}
+                        <div class="form-group">{{ field.label_tag }}{{ field }}{% for error in field.errors %}<p
+                                class="errorlist">{{ error }}</p>{% endfor %}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section" id="extra-services-container">
+                <div class="section-header">
+                    <h3>3. Servicios Extra</h3>
+                    <button type="button" class="add-btn"
+                        onclick="cloneFormSection('extra-services-container', 'extra-service-fields', 'Servicio Extra')"
+                        title="Añadir">+</button>
+                </div>
+
+                <div class="extra-service-fields form-clonable-section" data-form-prefix="extra_service">
+                    <div class="clonable-header" onclick="toggleClonableContent(this)">
+                        <h4 class="clonable-title">Servicio Extra 1</h4>
+                        <div class="clonable-header-controls">
+                            <button type="button" class="clonable-toggle">▼</button>
+                        </div>
+                    </div>
+                    <div class="clonable-content">
+                        {% for field in service_form %}
+                        <div class="form-group">{{ field.label_tag }}{{ field }}{% for error in field.errors %}<p
+                                class="errorlist">{{ error }}</p>{% endfor %}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+            <button type="submit" class="submit-button"> Guardar Configuración Inicial</button>
+        </form>
+    </div>
+
+    <script>
+        let formCounters = {
+            'room-type-fields': 1,
+            'extra-service-fields': 1,
+        };
+
+        function toggleClonableContent(headerElement) {
+            const content = headerElement.nextElementSibling;
+            const toggleBtn = headerElement.querySelector('.clonable-toggle');
+
+            content.classList.toggle('collapsed');
+            toggleBtn.classList.toggle('collapsed');
+        }
+
+        function updateClonableTitle(section, baseTitle, counter) {
+            const header = section.querySelector('.clonable-header');
+            const titleElement = header.querySelector('.clonable-title');
+            const firstInput = section.querySelector('input[type="text"], input[type="number"], select');
+
+            if (firstInput) {
+                firstInput.addEventListener('input', function () {
+                    if (this.value.trim()) {
+                        titleElement.textContent = this.value;
+                    } else {
+                        titleElement.textContent = `${baseTitle} ${counter}`;
+                    }
+                });
+            }
+        }
+
+        function cloneFormSection(containerId, sectionClass, baseTitle) {
+            const container = document.getElementById(containerId);
+            const originalSection = container.querySelector(`.${sectionClass}`);
+
+            const newSection = originalSection.cloneNode(true);
+            const prefix = originalSection.getAttribute('data-form-prefix');
+            const counter = formCounters[sectionClass] + 1;
+
+            const titleElement = newSection.querySelector('.clonable-title');
+            titleElement.textContent = `${baseTitle} ${counter}`;
+
+            const content = newSection.querySelector('.clonable-content');
+            const toggleBtn = newSection.querySelector('.clonable-toggle');
+            content.classList.remove('collapsed');
+            toggleBtn.classList.remove('collapsed');
+
+            newSection.querySelectorAll('input, textarea, select, label').forEach(element => {
+                if (element.tagName === 'LABEL') {
+                    const currentFor = element.getAttribute('for');
+                    if (currentFor) {
+                        element.setAttribute('for', currentFor.replace(prefix + '-', prefix + '-' + counter + '-'));
+                    }
+                }
+
+                if (element.id) {
+                    element.id = element.id.replace(prefix + '-', prefix + '-' + counter + '-');
+                }
+                if (element.name) {
+                    element.name = element.name.replace(prefix + '-', prefix + '-' + counter + '-');
+                }
+
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.value = '';
+                }
+
+                element.closest('.form-group')?.querySelectorAll('.errorlist').forEach(error => error.remove());
+            });
+
+            const headerControls = newSection.querySelector('.clonable-header-controls');
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'remove-btn';
+            removeBtn.textContent = '×';
+            removeBtn.onclick = function (e) {
+                e.stopPropagation();
+                newSection.remove();
+            };
+            headerControls.appendChild(removeBtn);
+
+            container.appendChild(newSection);
+            formCounters[sectionClass] = counter;
+
+            updateClonableTitle(newSection, baseTitle, counter);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateClonableTitle(
+                document.querySelector('.room-type-fields'),
+                'Tipo de Habitación',
+                1
+            );
+            updateClonableTitle(
+                document.querySelector('.extra-service-fields'),
+                'Servicio Extra',
+                1
+            );
+        });
+    </script>
+</body>
+
+</html>

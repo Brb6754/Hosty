@@ -1,0 +1,29 @@
+body {
+    background-color: #f6f2eb;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.central-logo {
+    background-image: url('../assets/Logo.png');
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+
+    animation: introPan 1.8s ease-out forwards;
+}
+
+@keyframes introPan {
+    0% {
+        background-position: 0% 50%;
+        filter: blur(4px) brightness(0.85);
+    }
+
+    100% {
+        background-position: 50% 50%;
+        filter: blur(0) brightness(1);
+    }
+}

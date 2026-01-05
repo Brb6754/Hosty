@@ -1,0 +1,1237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ hotel_name }} | Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/gridstack@7.2.3/dist/gridstack.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <div class="top-control-bar">
+            <div class="control-group">
+                <button class="control-btn theme-toggle-btn" onclick="toggleTheme()" title="Change theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="control-btn color-settings-btn" onclick="toggleGlobalColorPicker()" title="Widgets Color">
+                    <span>🎨</span>
+                </button>
+                <div class="global-color-palette" id="globalColorPalette">
+                    <div class="palette-header">Widgets Color</div>
+                    <div class="color-grid">
+                        <div class="color-option" style="background: #ff4444;" onclick="setGlobalColor('red')"></div>
+                        <div class="color-option" style="background: #ffbb33;" onclick="setGlobalColor('orange')"></div>
+                        <div class="color-option" style="background: #ffeb3b;" onclick="setGlobalColor('yellow')"></div>
+                        <div class="color-option" style="background: #00C851;" onclick="setGlobalColor('green')"></div>
+                        <div class="color-option" style="background: #33b5e5;" onclick="setGlobalColor('teal')"></div>
+                        <div class="color-option" style="background: #4285F4;" onclick="setGlobalColor('blue')"></div>
+                        <div class="color-option" style="background: #aa66cc;" onclick="setGlobalColor('purple')"></div>
+                        <div class="color-option" style="background: #ec407a;" onclick="setGlobalColor('pink')"></div>
+                        <div class="color-option default-color" style="background: linear-gradient(135deg, #ff8800, #ff5500);" onclick="setGlobalColor('default')"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <button class="control-btn save-btn" onclick="saveLayout()" title="Save layout">
+                    <span class="btn-text">Save</span>
+                </button>
+                <button class="control-btn reset-btn" onclick="resetLayout()" title="Reset layout">
+                    <span class="btn-text">Reset</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="welcome-content">
+            <div class="welcome-animation">
+                <h1 class="hotel-title">{{ hotel_name }}</h1>
+                <p class="welcome-message">Create your custom dashboard</p>
+                <div class="welcome-hint">
+                    <p>Press the Widgets button to get started</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-stack"></div>
+    </div>
+
+    <div class="floating-menu-container">
+        <button class="floating-menu-btn" onclick="toggleWidgets()">
+            <span class="menu-icon"></span>
+            <span>Widgets</span>
+        </button>
+    </div>
+
+    <div class="widgets-panel" id="widgetsPanel">
+        <div class="panel-header">
+            <h3>Add Widgets</h3>
+            <button class="close-panel-btn" onclick="toggleWidgets()">×</button>
+        </div>
+        <div class="widgets-grid">
+            <div class="widget-item" onclick="addGeneralInfoWidget()">
+                <div class="widget-icon">📊</div>
+                <h3>General Information</h3>
+                <p>Hotel details</p>
+            </div>
+            <div class="widget-item" onclick="addRoomsWidget()">
+                <div class="widget-icon">🛏️</div>
+                <h3>Rooms</h3>
+                <p>Manage rooms</p>
+            </div>
+            <div class="widget-item" onclick="addAnalogClockWidget()">
+                <div class="widget-icon">🕐</div>
+                <h3>Analog Clock</h3>
+                <p>Classic timepiece</p>
+            </div>
+            <div class="widget-item" onclick="addDigitalClockWidget()">
+                <div class="widget-icon">⏰</div>
+                <h3>Digital Clock</h3>
+                <p>Modern display</p>
+            </div>
+            <div class="widget-item" onclick="addBookingWidget()">
+                <div class="widget-icon">📅</div>
+                <h3>Reservations</h3>
+                <p>Create bookings</p>
+            </div>
+            <div class="widget-item" onclick="addCheckInWidget()">
+                <div class="widget-icon">🏨</div>
+                <h3>Check-In</h3>
+                <p>Today's arrivals</p>
+            </div>
+            <div class="widget-item" onclick="addMaintenanceWidget()">
+                <div class="widget-icon">🔧</div>
+                <h3>Maintenance</h3>
+                <p>Tasks & Priority Queue</p>
+            </div>
+            <div class="widget-item" onclick="addHeapWidget()">
+                <div class="widget-icon">🛎️</div>
+                <h3>Service Queue</h3>
+                <p>Min-Heap Algo</p>
+            </div>
+            <div class="widget-item" onclick="addSetWidget()">
+                <div class="widget-icon">⛔</div>
+                <h3>Do Not Disturb</h3>
+                <p>Set</p>
+            </div>
+            <div class="widget-item" onclick="addNotificationWidget()">
+    <div class="widget-icon">🔔</div>
+    <h3>Notifications</h3>
+    <p>Queue (FIFO)</p>
+</div>
+<div class="widget-item" onclick="addLogWidget()">
+    <div class="widget-icon">📜</div>
+    <h3>System Log</h3>
+    <p>History Record</p>
+</div>
+<div class="widget-item" onclick="addMapWidget()">
+    <div class="widget-icon">🔍</div>
+    <h3>Guest Lookup</h3>
+    <p>Hash Map</p>
+</div>
+<div class="widget-item" onclick="addLinkedListWidget()">
+    <div class="widget-icon">🧹</div>
+    <h3>Cleaning Route </h3>
+    <p>Linked List</p>
+</div>
+<div class="widget-item" onclick="addSearchWidget()">
+    <div class="widget-icon">🔡</div>
+    <h3>Guest Search</h3>
+    <p>String Algorithm</p>
+</div>
+        </div>
+    </div>
+
+    <div class="notification" id="saveNotification">
+        <span class="notification-icon">✓</span>
+        <span class="notification-text">Layout saved successfully</span>
+    </div>
+
+    <template id="general-info-template">
+        <div class="grid-stack-item-content widget-content">
+            <div class="widget-header">
+                <h3>Hotel Information</h3>
+                <div class="widget-header-controls">
+                    <button class="remove-widget-btn" onclick="removeWidget(this)" title="Remove widget">×</button>
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="hotel-info-card">
+                    <p class="hotel-name-display"><strong>Hotel:</strong> {{ hotel_name }}</p>
+                </div>
+                <div class="info-section">
+                    <h4>Room Types</h4>
+                    <ul class="info-list">
+                        {% for room in room_types %}
+                        <li>
+                            <span class="list-icon">▪</span>
+                            <span>{{ room.name }}</span>
+                            <span class="capacity-badge">Cap: {{ room.capacity }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="empty-state"><span>No rooms registered</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h4>Extra Services</h4>
+                    <ul class="info-list">
+                        {% for service in extra_services %}
+                        <li>
+                            <span class="list-icon">▪</span>
+                            <span>{{ service.name }}</span>
+                            <span class="price-badge">${{ service.price }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="empty-state"><span>No services registered</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="search-widget-template">
+    <div class="grid-stack-item-content widget-content">
+        <div class="widget-header">
+            <h3> Guest Search</h3>
+            <div class="widget-header-controls">
+                <button class="remove-widget-btn" onclick="removeWidget(this)">×</button>
+            </div>
+        </div>
+        <div class="widget-body search-body">
+            <div style="position:relative; margin-bottom:15px;">
+                <input type="text" placeholder="Type name (e.g. 'Ana')..." 
+                       class="booking-input" 
+                       onkeyup="performGuestSearch(this)"
+                       style="padding-left:35px;">
+                <span style="position:absolute; left:10px; top:10px; opacity:0.5;">🔍</span>
+            </div>
+            
+            <div style="font-size:0.7rem; opacity:0.6; margin-bottom:5px; font-weight:bold; display:flex; justify-content:space-between;">
+                <span>MATCHES</span>
+                <span>STATUS</span>
+            </div>
+            
+            <div class="search-results" style="display:flex; flex-direction:column; gap:5px; max-height:220px; overflow-y:auto;">
+                <div style="text-align:center; padding:20px; color:#aaa;">Type to start algo...</div>
+            </div>
+        </div>
+    </div>
+</template>
+
+    <template id="rooms-widget-template">
+        <div class="grid-stack-item-content widget-content">
+            <div class="widget-header">
+                <h3>Rooms</h3>
+                <div class="widget-header-controls">
+                    <button class="add-room-btn" onclick="openAddRoomModal()" title="Add Room"><span>+</span></button>
+                    <button class="remove-widget-btn" onclick="removeWidget(this)" title="Delete widget">×</button>
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="rooms-list">
+                    <ul class="info-list rooms-list-ul">
+                        {% for room in rooms %}
+                        <li id="room-item-{{ room.id }}">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span class="list-icon">▪</span>
+                                <strong>{{ room.number }}</strong> - {{ room.room_type.name }}
+                                <span id="date-info-{{ room.id }}" style="font-size:0.75rem; color:#aaa; font-weight:600;">
+                                    {{ room.date_info }}
+                                </span>
+                            </div>
+
+                            <select 
+                                class="status-select {{ room.state }}" 
+                                onchange="changeRoomStatus(this, {{ room.id }})"
+                                autocomplete="off">
+                                
+                                <option value="available" {% if room.state == 'available' %}selected{% endif %}>Available</option>
+                                <option value="occupied" {% if room.state == 'occupied' %}selected{% endif %}>Occupied</option>
+                                <option value="maintenance" {% if room.state == 'maintenance' %}selected{% endif %}>Maintenance</option>
+                                <option value="cleaning" {% if room.state == 'cleaning' %}selected{% endif %}>Cleaning</option>
+                            </select>
+                        </li>
+                        {% empty %}
+                        <li class="no-rooms empty-state">No rooms registered</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="set-widget-template">
+    <div class="grid-stack-item-content widget-content">
+        <div class="widget-header">
+            <h3> Do Not Disturb (Set)</h3>
+            <div class="widget-header-controls">
+                <button class="add-room-btn" onclick="openDNDModal()" title="Manage DND">⚙️</button>
+                <button class="remove-widget-btn" onclick="removeWidget(this)">×</button>
+            </div>
+        </div>
+        <div class="widget-body set-body">
+            <div style="font-size:0.75rem; opacity:0.6; margin-bottom:10px; text-align:center;">Active DND Rooms (Unique Collection)</div>
+            
+            <div class="set-container" style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
+                Loading...
+            </div>
+        </div>
+    </div>
+</template>
+<template id="notification-widget-template">
+    <div class="grid-stack-item-content widget-content">
+        <div class="widget-header">
+            <h3 >Notifications (Queue)</h3>
+            <div class="widget-header-controls">
+                <button class="add-room-btn" onclick="openNotifyModal()" title="New Alert">+</button>
+                <button class="remove-widget-btn" onclick="removeWidget(this)">×</button>
+            </div>
+        </div>
+        <div class="widget-body notify-body">
+            <button onclick="readNextNotification(this)" style="width:100%; padding:10px; background:var(--accent-color); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-bottom:15px; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+                 READ NEXT (DEQUEUE)
+            </button>
+            
+            <div class="notify-list" style="display:flex; flex-direction:column; gap:8px;">
+                Loading...
+            </div>
+        </div>
+    </div>
+</template>
+<template id="log-widget-template">
+    <div class="grid-stack-item-content widget-content">
+        <div class="widget-header" style="background: linear-gradient(135deg, #475569, #1e293b);">
+            <h3> Activity Log</h3>
+            <div class="widget-header-controls">
+                <button class="remove-widget-btn" onclick="removeWidget(this)">×</button>
+            </div>
+        </div>
+        <div class="widget-body log-body" style="background:#0f172a; color:#00ff00; font-family:monospace; padding:15px;">
+            <div class="log-list" style="display:flex; flex-direction:column; gap:4px; font-size:0.8rem;">
+                Loading logs...
+            </div>
+        </div>
+    </div>
+</template>
+<template id="map-widget-template">
+    <div class="grid-stack-item-content widget-content">
+        <div class="widget-header">
+            <h3> Fast Lookup (Hash Map)</h3>
+            <div class="widget-header-controls">
+                <button class="remove-widget-btn" onclick="removeWidget(this)">×</button>
+            </div>
+        </div>
+        <div class="widget-body map-body">
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Search by Room Number using Hash Indexing.</p>
+            
+            <form onsubmit="performMapLookup(event)" style="display:flex; gap:5px; margin-bottom:20px;">
+                <input type="text" name="room_number" placeholder="Ex: 101" class="booking-input" style="padding:8px;" required>
+                <button type="submit" class="btn-primary" style="padding:8px 15px;">Search</button>
+            </form>
+            
+            <div class="map-result" style="text-align:center; display:none;">
+                <div style="font-size:3rem; margin-bottom:10px;">👤</div>
+                <h4 class="result-name" style="margin:0; color:var(--accent-color);">Guest Name</h4>
+                <div class="result-type" style="font-size:0.9rem; opacity:0.7;">Room Type</div>
+            </div>
+            
+            <div class="map-error" style="text-align:center; color:#ff4444; display:none; margin-top:20px;">
+                Room Empty / Not Found
+            </div>
+        </div>
+    </div>
+</template>
+
+    <template id="maintenance-widget-template">
+        <div class="grid-stack-item-content widget-content">
+            <div class="widget-header">
+                <h3> Maintenance (Priority Queue)</h3>
+                <div class="widget-header-controls">
+                    <button class="add-room-btn" onclick="openMaintenanceModal()" title="Add Task"><span>+</span></button>
+                    <button class="remove-widget-btn" onclick="removeWidget(this)">×</button>
+                </div>
+            </div>
+            <div class="widget-body maintenance-body">
+                <div style="display:flex; justify-content:space-between; font-size:0.7rem; opacity:0.6; margin-bottom:10px; padding:0 5px; font-weight:700; letter-spacing:1px;">
+                    <span>PRIORITY / ROOM</span>
+                    <span>ACTION</span>
+                </div>
+                <div class="maintenance-list">
+                    <div style="text-align:center; padding:20px;">Loading tasks...</div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="analog-clock-template">
+        <div class="grid-stack-item-content widget-content clock-widget">
+            <button class="clock-remove-btn" onclick="removeWidget(this)" title="Remove widget">×</button>
+            <div class="widget-body clock-body">
+                <div class="analog-clock">
+                    <div class="clock-face">
+                        <div class="clock-center"></div>
+                        <div class="clock-hand hour-hand"></div>
+                        <div class="clock-hand minute-hand"></div>
+                        <div class="clock-hand second-hand"></div>
+                        <div class="clock-number" style="--i:12;"><span>12</span></div>
+                        <div class="clock-number" style="--i:3;"><span>3</span></div>
+                        <div class="clock-number" style="--i:6;"><span>6</span></div>
+                        <div class="clock-number" style="--i:9;"><span>9</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="linkedlist-widget-template">
+    <div class="grid-stack-item-content widget-content">
+        <div class="widget-header">
+            <h3> Housekeeping Route (Linked List)</h3>
+            <div class="widget-header-controls">
+                <button class="add-room-btn" onclick="startCleaningDay()" title="Start New Day (Reset All)">☀️</button>
+                <button class="remove-widget-btn" onclick="removeWidget(this)">×</button>
+            </div>
+        </div>
+        <div class="widget-body linked-list-body">
+            <div style="font-size:0.75rem; opacity:0.7; margin-bottom:10px; text-align:center;">
+                Linked List Traversal (Head → Next)
+            </div>
+            
+            <div class="route-container" style="display:flex; flex-direction:column; align-items:center; gap:5px; max-height:280px; overflow-y:auto; padding-right:5px;">
+                Loading...
+            </div>
+        </div>
+    </div>
+</template>
+
+    <template id="digital-clock-template">
+        <div class="grid-stack-item-content widget-content clock-widget">
+            <button class="clock-remove-btn" onclick="removeWidget(this)" title="Remove widget">×</button>
+            <div class="widget-body clock-body">
+                <div class="digital-clock">
+                    <div class="digital-time">
+                        <span class="time-digit">00</span><span class="time-separator">:</span>
+                        <span class="time-digit">00</span><span class="time-separator">:</span>
+                        <span class="time-digit">00</span>
+                    </div>
+                    <div class="digital-date"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="booking-widget-template">
+    <div class="grid-stack-item-content widget-content">
+        <div class="widget-header">
+            <h3>New Reservation</h3>
+            <div class="widget-header-controls">
+                <button class="remove-widget-btn" onclick="removeWidget(this)" title="Remove widget">×</button>
+            </div>
+        </div>
+        <div class="widget-body booking-body">
+            <form class="booking-form" onsubmit="submitBooking(event, this)">
+                {% csrf_token %}
+                <div class="booking-section">
+                    <h4>Dates</h4>
+                    <div class="date-inputs">
+                        <div class="input-group">
+                            <label>Check-in</label>
+                            <input type="date" name="check_in_date" required class="booking-input">
+                        </div>
+                        <div class="input-group">
+                            <label>Check-out</label>
+                            <input type="date" name="check_out_date" required class="booking-input">
+                        </div>
+                    </div>
+                    <div class="nights-display">Nights: <span class="nights-count">0</span></div>
+                </div>
+                
+                <div class="booking-section">
+                    <h4>Room</h4>
+                    <div class="input-group">
+                        <label>Select Room</label>
+                        <select name="room" required class="booking-input room-select-dropdown">
+                            <option value="">Choose a room...</option>
+                            
+                            {% for room in rooms %}
+                                {% if room.state == 'available' %}
+                                    <option value="{{ room.id }}" data-price="{{ room.price_per_night }}">
+                                        Room {{ room.number }} - {{ room.room_type.name }} (${{ room.price_per_night }}/night)
+                                    </option>
+                                {% endif %}
+                            {% empty %}
+                                <option disabled>No rooms found in system</option>
+                            {% endfor %}
+                            
+                        </select>
+                    </div>
+                    <div class="price-display">Total: $<span class="total-price">0</span></div>
+                </div>
+
+                <div class="booking-section">
+                    <h4>Guest Information</h4>
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <input type="text" name="first_name" required class="booking-input">
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <input type="text" name="last_name" required class="booking-input">
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required class="booking-input">
+                    </div>
+                    <div class="input-group">
+                        <label>Phone</label>
+                        <input type="tel" name="phone_number" class="booking-input">
+                    </div>
+                </div>
+                <button type="submit" class="booking-submit-btn"><span>✓</span> Create Reservation</button>
+            </form>
+        </div>
+    </div>
+</template>
+
+    <template id="checkin-widget-template">
+        <div class="grid-stack-item-content widget-content">
+            <div class="widget-header">
+                <h3> Today's Check-Ins</h3>
+                <div class="widget-header-controls">
+                    <button class="remove-widget-btn" onclick="removeWidget(this)" title="Remove widget">×</button>
+                </div>
+            </div>
+            <div class="widget-body checkin-body">
+                <div class="checkin-date-info">
+                    <span class="today-date"></span>
+                    <span class="arrivals-count">0 Arrivals</span>
+                </div>
+                <div class="checkin-list" class="checkin-list-container">
+                    <div style="text-align:center; padding:15px;">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="heap-widget-template">
+    <div class="grid-stack-item-content widget-content">
+        <div class="widget-header">
+            <h3> Service (Min-Heap)</h3>
+            <div class="widget-header-controls">
+                <button class="add-room-btn" onclick="openServiceModal()">+</button>
+                <button class="remove-widget-btn" onclick="removeWidget(this)">×</button>
+            </div>
+        </div>
+        <div class="widget-body heap-body">
+            <div style="font-size:0.8rem; color:#aaa; margin-bottom:10px;">Oldest orders appear first (Root)</div>
+            <div class="heap-list">Loading...</div>
+        </div>
+    </div>
+</template>
+
+    <div id="checkInModal" class="modal checkin-modal" style="display:none;">
+        <div class="modal-content checkin-modal-content">
+            <div class="modal-header">
+                <h3> Check-In Process</h3>
+                <button class="close-modal-btn" onclick="closeCheckInModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="checkin-guest-info">
+                    <h4>Guest Information</h4>
+                    <div class="info-row"><span class="info-label">Name:</span><span class="info-value guest-name"></span></div>
+                    <div class="info-row"><span class="info-label">Email:</span><span class="info-value guest-email"></span></div>
+                    <div class="info-row"><span class="info-label">Phone:</span><span class="info-value guest-phone"></span></div>
+                    <div class="info-row"><span class="info-label">Room:</span><span class="info-value guest-room"></span></div>
+                    <div class="info-row"><span class="info-label">Nights:</span><span class="info-value guest-nights"></span></div>
+                </div>
+
+                <form id="checkInForm" onsubmit="processCheckIn(event)">
+                    {% csrf_token %}
+                    <input type="hidden" name="booking_id" id="booking_id_input">
+                    <div class="checkin-section">
+                        <h4> Check-In Time</h4>
+                        <input type="time" name="check_in_time" required class="checkin-input">
+                    </div>
+                    <div class="checkin-section">
+                        <h4> Credit Card</h4>
+                        <div class="input-group">
+                            <label>Card Number</label>
+                            <input type="text" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19" class="checkin-input" required>
+                        </div>
+                        <div class="card-details">
+                            <div class="input-group">
+                                <label>Expiry</label>
+                                <input type="text" name="card_expiry" placeholder="MM/YY" maxlength="5" class="checkin-input" required>
+                            </div>
+                            <div class="input-group">
+                                <label>CVV</label>
+                                <input type="text" name="card_cvv" placeholder="123" maxlength="4" class="checkin-input" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Cardholder Name</label>
+                            <input type="text" name="cardholder_name" class="checkin-input" required>
+                        </div>
+                    </div>
+                    <div class="checkin-section">
+                        <h4> Notes</h4>
+                        <textarea name="notes" class="checkin-input" rows="3" placeholder="Special requests..."></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeCheckInModal()">Cancel</button>
+                        <button type="submit" class="btn-primary"><span>✓</span> Complete Check-In</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="notifyModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:var(--widget-bg); padding:20px; border-radius:10px; width:300px;">
+        <h3>New Notification</h3>
+        <form onsubmit="submitNotification(event)">
+            <input type="text" name="message" placeholder="Message (e.g. VIP in Lobby)" required class="booking-input" style="width:100%; margin-bottom:10px;">
+            <select name="priority" class="booking-input" style="width:100%; margin-bottom:15px;">
+                <option value="Normal">Normal</option>
+                <option value="Urgent">🔴 Urgent</option>
+            </select>
+            <div style="text-align:right; display:flex; gap:10px; justify-content:flex-end;">
+                <button type="button" onclick="document.getElementById('notifyModal').style.display='none'" style="padding:8px; border:1px solid #ccc; background:transparent; color:var(--text-color); border-radius:5px; cursor:pointer;">Cancel</button>
+                <button type="submit" style="padding:8px; border:none; background:var(--accent-color); color:white; border-radius:5px; cursor:pointer;">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <div id="maintenanceModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+        <div class="modal-content" style="background:var(--widget-bg); padding:20px; border-radius:10px; width:300px; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+            <h3 style="margin-top:0; color:var(--text-color);">New Maintenance Task</h3>
+            <form id="maintenanceForm" onsubmit="submitMaintenanceTask(event)">
+                <div style="margin-bottom:10px;">
+                    <label style="display:block; margin-bottom:5px; color:var(--text-color);">Room:</label>
+                    <select name="room" required style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--glass-border); background:var(--bg-color); color:var(--text-color);">
+                        {% for room in rooms %}
+                        <option value="{{ room.id }}">Room {{ room.number }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label style="display:block; margin-bottom:5px; color:var(--text-color);">Description:</label>
+                    <input type="text" name="description" placeholder="e.g., Fix AC, Change Towels" required style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--glass-border); background:var(--bg-color); color:var(--text-color);">
+                </div>
+                <div style="margin-bottom:15px;">
+                    <label style="display:block; margin-bottom:5px; color:var(--text-color);">Priority:</label>
+                    <select name="priority" style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--glass-border); background:var(--bg-color); color:var(--text-color);">
+                        <option value="1">🔴 Critical (Top Priority)</option>
+                        <option value="2">🟠 High</option>
+                        <option value="3" selected>🟡 Medium</option>
+                        <option value="4">🔵 Low</option>
+                    </select>
+                </div>
+                <div style="text-align:right;">
+                    <button type="button" onclick="closeMaintenanceModal()" style="padding:8px 15px; border:none; background:transparent; color:var(--text-color); cursor:pointer;">Cancel</button>
+                    <button type="submit" style="padding:8px 15px; border:none; background:var(--accent-color); color:white; border-radius:5px; cursor:pointer;">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addRoomModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+        <div class="modal-content" style="background:var(--widget-bg); padding:20px; border-radius:10px; width:300px; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+            <h3 style="margin-top:0; color:var(--text-color);">Add Room</h3>
+            <form id="addRoomForm" onsubmit="submitAddRoom(event)">
+                {% csrf_token %}
+                <div style="margin-bottom:10px;">
+                    <label style="display:block; margin-bottom:5px; color:var(--text-color);">Number:</label>
+                    <input type="text" name="number" required style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--glass-border); background:var(--bg-color); color:var(--text-color);">
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label style="display:block; margin-bottom:5px; color:var(--text-color);">Type:</label>
+                    <select name="room_type" required style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--glass-border); background:var(--bg-color); color:var(--text-color);">
+                        {% for type in room_types %}
+                        <option value="{{ type.id }}">{{ type.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label style="display:block; margin-bottom:5px; color:var(--text-color);">Price per night:</label>
+                    <input type="number" name="price_per_night" step="0.01" required style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--glass-border); background:var(--bg-color); color:var(--text-color);">
+                </div>
+                <div style="margin-bottom:15px;">
+                    <label style="display:block; margin-bottom:5px; color:var(--text-color);">State:</label>
+                    <select name="state" style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--glass-border); background:var(--bg-color); color:var(--text-color);">
+                        <option value="available">Available</option>
+                        <option value="occupied">Occupied</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="cleaning">Cleaning</option>
+                    </select>
+                </div>
+                <div style="text-align:right;">
+                    <button type="button" onclick="closeAddRoomModal()" style="padding:8px 15px; border:none; background:transparent; color:var(--text-color); cursor:pointer;">Cancel</button>
+                    <button type="submit" style="padding:8px 15px; border:none; background:var(--accent-color); color:white; border-radius:5px; cursor:pointer;">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="dndModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:var(--widget-bg); padding:20px; border-radius:10px; width:400px; max-height:80vh; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin:0; color:var(--text-color);">Manage DND Set</h3>
+            <button onclick="document.getElementById('dndModal').style.display='none'" style="background:transparent; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-color);">×</button>
+        </div>
+        
+        <p style="font-size:0.9rem; opacity:0.7; margin-bottom:15px;">Click a room to toggle DND status:</p>
+        
+        <div id="dnd-grid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;">
+            Loading rooms...
+        </div>
+    </div>
+</div>
+    <div id="serviceModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:var(--widget-bg); padding:20px; border-radius:10px; width:300px; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+        <h3 style="margin-top:0; color:var(--text-color);">Room Service</h3>
+        <form onsubmit="submitServiceOrder(event)">
+            <div style="margin-bottom:10px;">
+                <label style="color:var(--text-color);">Select Room:</label>
+                <select name="room_id" required style="width:100%; padding:10px; border-radius:5px; border:1px solid var(--glass-border); background:var(--input-bg); color:var(--text-color);">
+                    {% for room in rooms %}
+                        {% if room.state == 'occupied' %}
+                        <option value="{{ room.id }}">Room {{ room.number }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="color:var(--text-color);">Item:</label>
+                <input type="text" name="item" placeholder="e.g. Club Sandwich" required style="width:100%; padding:10px; border-radius:5px; border:1px solid var(--glass-border); background:var(--input-bg); color:var(--text-color);">
+            </div>
+            <div style="text-align:right;">
+                <button type="button" onclick="document.getElementById('serviceModal').style.display='none'" style="padding:8px 15px; border:none; background:transparent; color:var(--text-color); cursor:pointer;">Cancel</button>
+                <button type="submit" style="padding:8px 15px; border:none; background:var(--accent-color); color:white; border-radius:5px; cursor:pointer;">Order</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gridstack@7.2.3/dist/gridstack-all.js"></script>
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const widgetIntervals = new WeakMap();
+        let grid = GridStack.init({
+            cellHeight: 50,
+            margin: 10,
+            float: true,
+            disableOneColumnMode: true,
+            animate: true
+        });
+
+        let currentGlobalColor = localStorage.getItem('globalWidgetColor') || 'default';
+        applyGlobalColorToAllWidgets(currentGlobalColor);
+
+        function toggleWidgets() { document.getElementById('widgetsPanel').classList.toggle('active'); }
+        function checkWidgets() { document.getElementById('welcome-content').style.display = grid.getGridItems().length ? 'none' : 'flex'; }
+        
+        function addWidgetGeneric(templateId, w, h, initCallback) {
+            const template = document.getElementById(templateId);
+            const widget = grid.addWidget({ w: w, h: h, content: template.innerHTML });
+            const widgetContent = widget.querySelector('.widget-content');
+            applyColorToWidget(widgetContent, currentGlobalColor);
+            checkWidgets(); toggleWidgets();
+            if (initCallback) initCallback(widgetContent);
+            setTimeout(() => saveLayout(true), 300);
+        }
+
+        function addGeneralInfoWidget() { addWidgetGeneric('general-info-template', 4, 10); }
+        function addRoomsWidget() { addWidgetGeneric('rooms-widget-template', 4, 10, el => startRoomsAutoRefresh(el)); }
+        function addAnalogClockWidget() { addWidgetGeneric('analog-clock-template', 3, 6, (el) => startAnalogClock(el.querySelector('.analog-clock'), el)); }
+        function addDigitalClockWidget() { addWidgetGeneric('digital-clock-template', 3, 4, (el) => startDigitalClock(el.querySelector('.digital-clock'), el)); }
+        function addBookingWidget() { addWidgetGeneric('booking-widget-template', 5, 12, (el) => initializeBookingForm(el.querySelector('.booking-form'))); }
+        function addCheckInWidget() { addWidgetGeneric('checkin-widget-template', 5, 10, (el) => startCheckInAutoRefresh(el)); }
+        function addMaintenanceWidget() { addWidgetGeneric('maintenance-widget-template', 4, 8, (el) => startMaintenanceAutoRefresh(el)); }
+        function addHeapWidget() { addWidgetGeneric('heap-widget-template', 3, 8, el => startHeapAutoRefresh(el)); }
+        function addSetWidget() { addWidgetGeneric('set-widget-template', 3, 6, el => startSetAutoRefresh(el)); }
+        function addNotificationWidget() { addWidgetGeneric('notification-widget-template', 3, 8, el => startNotifyAutoRefresh(el)); }
+        function addLogWidget() { addWidgetGeneric('log-widget-template', 4, 8, el => startLogAutoRefresh(el)); }
+        function addMapWidget() { addWidgetGeneric('map-widget-template', 3, 7); }
+        function addLinkedListWidget() { addWidgetGeneric('linkedlist-widget-template', 3, 10, el => startLinkedListAutoRefresh(el)); }
+        function addWaitlistWidget() { addWidgetGeneric('waitlist-widget-template', 3, 10, el => startWaitlistAutoRefresh(el)); }
+        function addSearchWidget() { addWidgetGeneric('search-widget-template', 4, 8); }
+
+        function reinitializeWidgets(el) {
+            if (el.querySelector('.analog-clock')) startAnalogClock(el.querySelector('.analog-clock'), el);
+            if (el.querySelector('.digital-clock')) startDigitalClock(el.querySelector('.digital-clock'), el);
+            if (el.querySelector('.booking-form')) initializeBookingForm(el.querySelector('.booking-form'));
+            if (el.querySelector('.checkin-body')) startCheckInAutoRefresh(el);
+            if (el.querySelector('.maintenance-list')) startMaintenanceAutoRefresh(el);
+            if (el.querySelector('.heap-body')) startHeapAutoRefresh(el);
+            if (el.querySelector('.set-body')) startSetAutoRefresh(el);
+            if (el.querySelector('.notify-body')) startNotifyAutoRefresh(el);
+            if (el.querySelector('.log-body')) startLogAutoRefresh(el);
+            if (el.querySelector('.route-container')) startLinkedListAutoRefresh(el);
+            if (el.querySelector('.waitlist-list')) startWaitlistAutoRefresh(el);
+            if (el.querySelector('.rooms-list')) startRoomsAutoRefresh(el);
+        }
+
+        function openMaintenanceModal() { document.getElementById('maintenanceModal').style.display = 'flex'; }
+        function closeMaintenanceModal() { document.getElementById('maintenanceModal').style.display = 'none'; document.getElementById('maintenanceForm').reset(); }
+
+        function submitMaintenanceTask(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            fetch('/maintenance/add/', { method: 'POST', body: formData, headers: { 'X-CSRFToken': getCookie('csrftoken') } })
+            .then(r => r.json()).then(data => {
+                if(data.success) {
+                    showNotification('Task Added'); closeMaintenanceModal();
+                    document.querySelectorAll('.widget-content').forEach(w => { if(w.querySelector('.maintenance-list')) loadMaintenanceTasks(w); });
+                } else alert('Error: ' + JSON.stringify(data.errors));
+            });
+        }
+
+        function startMaintenanceAutoRefresh(el) {
+            loadMaintenanceTasks(el);
+            widgetIntervals.set(el, setInterval(() => loadMaintenanceTasks(el), 15000));
+        }
+
+        function loadMaintenanceTasks(el) {
+            const list = el.querySelector('.maintenance-list');
+            fetch(`/maintenance/api/pending/?t=${Date.now()}`).then(r=>r.json()).then(d=>{
+                const tasks = d.tasks || [];
+                list.innerHTML = tasks.length ? '' : '<div style="text-align:center;padding:20px;color:#aaa;">All tasks completed ✨</div>';
+                tasks.forEach(t => {
+                    const div = document.createElement('div');
+                    div.className = 'maintenance-item';
+                    div.innerHTML = `<div style="display:flex;align-items:center;"><div><span class="prio-badge prio-${t.priority}">${t.priority_display}</span><span class="task-desc">${t.description}</span><span class="task-room">Room ${t.room} • ${t.created}</span></div></div><button class="btn-complete" onclick="completeTask(this, ${t.id})">✓</button>`;
+                    list.appendChild(div);
+                });
+            });
+        }
+
+        function completeTask(btn, id) {
+            const formData = new FormData(); formData.append('task_id', id);
+            fetch('/maintenance/complete/', { method: 'POST', body: formData, headers: { 'X-CSRFToken': getCookie('csrftoken') } })
+            .then(r=>r.json()).then(d=>{ if(d.success) { showNotification('Task Completed'); document.querySelectorAll('.widget-content').forEach(w => { if(w.querySelector('.maintenance-list')) loadMaintenanceTasks(w); }); } });
+        }
+
+        function changeRoomStatus(selectElement, roomId) {
+            const newState = selectElement.value;
+            fetch('/rooms/update-status/', {
+                method: 'POST',
+                body: JSON.stringify({ room_id: roomId, state: newState }),
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    selectElement.className = `status-select ${newState}`;
+                    updateBookingDropdowns(roomId, newState);
+                    const dateSpan = document.getElementById(`date-info-${roomId}`);
+                    if(dateSpan) dateSpan.textContent = data.date_info;
+                    showNotification('Status updated');
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateBookingDropdowns(id, st) {
+            document.querySelectorAll('.room-select-dropdown').forEach(s => { const o = s.querySelector(`option[value="${id}"]`); if(st!=='available' && o) o.remove(); });
+        }
+
+        function submitAddRoom(e) {
+            e.preventDefault();
+            fetch('{% url "add_room" %}', { method:'POST', body:new FormData(e.target), headers:{'X-CSRFToken':getCookie('csrftoken')} })
+            .then(r=>r.json()).then(d=>{
+                if(d.success) {
+                    const r = d.room;
+                    const html = `<li id="room-item-${r.id}"><span class="list-icon">▪</span><strong>${r.number}</strong> - ${r.room_type} <select class="status-select ${r.state}" onchange="changeRoomStatus(this, ${r.id})"><option value="available" ${r.state==='available'?'selected':''}>Available</option><option value="occupied" ${r.state==='occupied'?'selected':''}>Occupied</option><option value="maintenance" ${r.state==='maintenance'?'selected':''}>Maintenance</option><option value="cleaning" ${r.state==='cleaning'?'selected':''}>Cleaning</option></select></li>`;
+                    document.querySelectorAll('.rooms-list-ul').forEach(u=>{u.querySelector('.no-rooms')?.remove(); u.insertAdjacentHTML('beforeend', html);});
+                    if(r.state==='available') document.querySelectorAll('.room-select-dropdown').forEach(s=>{const o=document.createElement('option'); o.value=r.id; o.text=`Room ${r.number} - ${r.room_type} ($${r.price})`; s.add(o);});
+                    closeAddRoomModal(); e.target.reset(); showNotification('Room Added');
+                } else alert(JSON.stringify(d.errors));
+            });
+        }
+
+        function startCheckInAutoRefresh(el) { loadTodayCheckIns(el); widgetIntervals.set(el, setInterval(()=>loadTodayCheckIns(el), 30000)); }
+        function loadTodayCheckIns(el) {
+            const list = el.querySelector('.checkin-list'), count = el.querySelector('.arrivals-count');
+            el.querySelector('.today-date').textContent = new Date().toLocaleDateString('en-US', {weekday:'short', day:'numeric'});
+            fetch(`/bookings/api/today/?t=${Date.now()}`).then(r=>r.json()).then(d=>{
+                const arr = d.checkins || [];
+                if(count) count.textContent = arr.length + ' Arrivals';
+                list.innerHTML = arr.length ? '' : '<div style="text-align:center;padding:20px;color:#aaa;">No pending check-ins found.</div>';
+                arr.forEach(b => {
+                    const div = document.createElement('div');
+                    div.className='checkin-item';
+                    div.style.cssText = 'display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(255,255,255,0.1);animation:fadeIn 0.5s';
+                    div.innerHTML = `<div><strong>${b.guest_name}</strong><br><small>Room ${b.room_number} • ${b.nights} nights</small></div><button class="btn-checkin-action" style="background:var(--accent-color);border:none;color:white;padding:5px;border-radius:4px;cursor:pointer">Check-In</button>`;
+                    div.querySelector('.btn-checkin-action').onclick = () => openCheckInModal(b);
+                    list.appendChild(div);
+                });
+            });
+        }
+
+        function processCheckIn(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch('/rooms/checkin/process/', { method: 'POST', body: formData, headers: { 'X-CSRFToken': getCookie('csrftoken') } })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Check-in completed!');
+                    closeCheckInModal();
+                    document.querySelectorAll('.widget-content').forEach(w => { if (w.querySelector('.checkin-body')) loadTodayCheckIns(w); });
+                    const roomItem = document.getElementById(`room-item-${data.room_id}`);
+                    if (roomItem) {
+                        const select = roomItem.querySelector('.status-select');
+                        if (select) {
+                            select.value = 'occupied';
+                            select.className = 'status-select occupied';
+                            updateBookingDropdowns(data.room_id, 'occupied');
+                        }
+                        const dateSpan = document.getElementById(`date-info-${data.room_id}`);
+                        if(dateSpan) dateSpan.textContent = data.date_info;
+                    }
+                } else {
+                    alert('Error: ' + JSON.stringify(data.errors));
+                }
+            });
+        }
+
+        function initializeBookingForm(form) {
+            const inD = form.querySelector('[name="check_in_date"]');
+            const outD = form.querySelector('[name="check_out_date"]');
+            const rSel = form.querySelector('[name="room"]');
+            const pDisp = form.querySelector('.total-price');
+            const nDisp = form.querySelector('.nights-count');
+            
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            const localDate = now.toISOString().split('T')[0];
+            inD.min = localDate; outD.min = localDate;
+
+            const calc = () => {
+                if(inD.value && outD.value) {
+                    const start = new Date(inD.value);
+                    const end = new Date(outD.value);
+                    const diffTime = end - start;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                    nDisp.textContent = diffDays > 0 ? diffDays : 0;
+                    if(diffDays > 0 && rSel.value) {
+                        const price = parseFloat(rSel.options[rSel.selectedIndex].dataset.price || 0);
+                        pDisp.textContent = (diffDays * price).toFixed(2);
+                    } else { pDisp.textContent = "0"; }
+                }
+            };
+            inD.onchange = () => { outD.min = inD.value; calc(); }; outD.onchange = rSel.onchange = calc;
+        }
+
+        function submitBooking(e, form) {
+            e.preventDefault();
+            fetch('{% url "create_booking" %}', { method:'POST', body:new FormData(form), headers:{'X-CSRFToken':getCookie('csrftoken')} })
+            .then(r=>r.json()).then(d=>{
+                if(d.success) {
+                    showNotification('Reservation Created'); form.reset(); form.querySelector('.total-price').textContent='0'; form.querySelector('.nights-count').textContent='0';
+                    document.querySelectorAll('.widget-content').forEach(w=>{if(w.querySelector('.checkin-body')) loadTodayCheckIns(w)});
+                } else alert(JSON.stringify(d.errors));
+            });
+        }
+
+        function openCheckInModal(b) {
+            const m = document.getElementById('checkInModal');
+            m.querySelector('.guest-name').textContent = b.guest_name; m.querySelector('.guest-room').textContent = b.room_number;
+            m.querySelector('.guest-nights').textContent = `${b.nights} nights`; m.querySelector('#booking_id_input').value = b.id;
+            m.querySelector('[name="check_in_time"]').value = new Date().toTimeString().slice(0,5);
+            m.querySelector('[name="cardholder_name"]').value = b.guest_name;
+            m.style.display = 'flex';
+        }
+        function closeCheckInModal() { document.getElementById('checkInModal').style.display='none'; document.getElementById('checkInForm').reset(); }
+        function openAddRoomModal() { document.getElementById('addRoomModal').style.display='flex'; }
+        function closeAddRoomModal() { document.getElementById('addRoomModal').style.display='none'; }
+        function showNotification(msg) { const n=document.getElementById('saveNotification'); n.querySelector('.notification-text').textContent=msg; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'),3000); }
+
+        function startAnalogClock(el, wc) {
+            const u = () => { const d=new Date(); el.querySelector('.hour-hand').style.transform=`rotate(${(d.getHours()%12)*30+d.getMinutes()*0.5}deg)`; el.querySelector('.minute-hand').style.transform=`rotate(${d.getMinutes()*6}deg)`; el.querySelector('.second-hand').style.transform=`rotate(${d.getSeconds()*6}deg)`; };
+            u(); widgetIntervals.set(wc, setInterval(u, 1000));
+        }
+        function startDigitalClock(el, wc) {
+            const u = () => { const d=new Date(), t=el.querySelectorAll('.time-digit'); t[0].textContent=String(d.getHours()).padStart(2,'0'); t[1].textContent=String(d.getMinutes()).padStart(2,'0'); t[2].textContent=String(d.getSeconds()).padStart(2,'0'); el.querySelector('.digital-date').textContent=d.toLocaleDateString('en-US',{weekday:'long'}); };
+            u(); widgetIntervals.set(wc, setInterval(u, 1000));
+        }
+
+        function saveLayout(s) { localStorage.setItem('dashboardLayout', JSON.stringify(grid.save())); if(!s) showNotification('Saved'); }
+        function loadLayout() {
+            const d = JSON.parse(localStorage.getItem('dashboardLayout'));
+            if(d) { grid.removeAll(); d.forEach(i => { if(i.content) { const w = grid.addWidget({x:i.x, y:i.y, w:i.w, h:i.h, content:i.content}).querySelector('.widget-content'); applyColorToWidget(w, currentGlobalColor); reinitializeWidgets(w); }}); checkWidgets(); }
+        }
+        function resetLayout() { if(confirm('Reset?')) { localStorage.removeItem('dashboardLayout'); grid.removeAll(); checkWidgets(); } }
+        function removeWidget(b) { const i=b.closest('.grid-stack-item'); const c=i.querySelector('.widget-content'); if(widgetIntervals.has(c)) clearInterval(widgetIntervals.get(c)); grid.removeWidget(i); setTimeout(()=>saveLayout(true),100); }
+        
+        function toggleTheme() { 
+            document.body.classList.toggle('dark-mode'); 
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light'); 
+            const btn = document.querySelector('.theme-toggle-btn span');
+            if(btn) btn.textContent = isDark ? '☀️' : '🌙';
+        }
+        function toggleGlobalColorPicker() { document.getElementById('globalColorPalette').classList.toggle('active'); }
+        function setGlobalColor(c) { currentGlobalColor=c; localStorage.setItem('globalWidgetColor',c); applyGlobalColorToAllWidgets(c); const palette = document.getElementById('globalColorPalette'); if(palette) palette.classList.remove('active'); showNotification('Color Applied: ' + c.charAt(0).toUpperCase() + c.slice(1)); }
+        function applyGlobalColorToAllWidgets(c) { document.querySelectorAll('.widget-content').forEach(w=>{w.className = w.className.replace(/widget-color-\w+/g,'') + ` widget-color-${c}`;}); }
+        function applyColorToWidget(w,c) { w.className = w.className.replace(/widget-color-\w+/g,'') + ` widget-color-${c}`; }
+
+        function startHeapAutoRefresh(el) { loadHeap(el); widgetIntervals.set(el, setInterval(() => loadHeap(el), 10000)); }
+        function openServiceModal() { document.getElementById('serviceModal').style.display='flex'; }
+        function submitServiceOrder(e) {
+            e.preventDefault();
+            fetch('/service/add/', {method:'POST', body:new FormData(e.target), headers:{'X-CSRFToken':getCookie('csrftoken')}})
+            .then(r=>r.json()).then(d=>{
+                if(d.success) {
+                    document.getElementById('serviceModal').style.display='none';
+                    e.target.reset();
+                    showNotification('Order Added');
+                    document.querySelectorAll('.widget-content').forEach(w => { if(w.querySelector('.heap-body')) loadHeap(w); });
+                } else { alert('Error adding order'); }
+            });
+        }
+        function loadHeap(el) {
+            const list = el.querySelector('.heap-list');
+            fetch(`/service/api/heap/?t=${Date.now()}`).then(r=>r.json()).then(d=>{
+                const heap = d.heap || [];
+                list.innerHTML = heap.length ? '' : '<div style="text-align:center;padding:20px;color:#aaa;">No orders</div>';
+                heap.forEach((node, index) => {
+                    const isRoot = index === 0;
+                    const style = isRoot ? 'background:rgba(255, 136, 0, 0.2); border:1px solid var(--accent-color); font-weight:bold;' : 'background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.1);';
+                    const html = `<div style="padding:10px; margin-bottom:5px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; ${style}"><div><div style="font-size:0.8rem; opacity:0.7;">${isRoot ? '👑 NEXT UP (Root)' : `Pos: ${index}`} • ${node.time_display}</div><div>${node.item} (Rm ${node.room})</div></div><button onclick="completeOrder(${node.id})" style="border:none; background:transparent; color:#00C851; cursor:pointer; font-size:1.2rem;" title="Done">✓</button></div>`;
+                    list.insertAdjacentHTML('beforeend', html);
+                });
+            });
+        }
+        function completeOrder(id) {
+            const fd = new FormData(); fd.append('order_id', id);
+            fetch('/service/complete/', {method:'POST', body:fd, headers:{'X-CSRFToken':getCookie('csrftoken')}})
+            .then(r=>r.json()).then(d => { if(d.success) { showNotification('Order Served'); document.querySelectorAll('.widget-content').forEach(w => { if(w.querySelector('.heap-body')) loadHeap(w); }); } });
+        }
+
+        function startSetAutoRefresh(el) { loadSet(el); widgetIntervals.set(el, setInterval(() => loadSet(el), 10000)); }
+        function loadSet(el) {
+            const container = el.querySelector('.set-container');
+            fetch(`/dnd/api/set/?t=${Date.now()}`).then(r => r.json()).then(d => {
+                const set = d.set || [];
+                container.innerHTML = set.length ? '' : '<div style="padding:20px; color:#aaa;">No rooms in DND</div>';
+                set.forEach(item => {
+                    container.insertAdjacentHTML('beforeend', `<div style="background: #ff4444; color: white; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); animation: fadeIn 0.3s;">⛔ ${item.room}</div>`);
+                });
+            });
+        }
+        function openDNDModal() { 
+            const modal = document.getElementById('dndModal');
+            const grid = document.getElementById('dnd-grid');
+            modal.style.display = 'flex';
+            const roomListItems = document.querySelectorAll('.rooms-list-ul li strong');
+            fetch(`/dnd/api/set/?t=${Date.now()}`).then(r=>r.json()).then(d => {
+                const activeDND = new Set(d.set.map(i => i.room));
+                grid.innerHTML = '';
+                roomListItems.forEach(strongTag => {
+                    const roomNum = strongTag.textContent.trim();
+                    const isActive = activeDND.has(roomNum);
+                    const btn = document.createElement('button');
+                    btn.textContent = roomNum;
+                    btn.style.cssText = `padding: 10px; border: 2px solid ${isActive ? '#ff4444' : 'var(--glass-border)'}; background: ${isActive ? '#ff4444' : 'var(--input-bg)'}; color: ${isActive ? 'white' : 'var(--text-color)'}; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s;`;
+                    btn.onclick = () => toggleDND(roomNum, btn);
+                    grid.appendChild(btn);
+                });
+                if(roomListItems.length === 0) grid.innerHTML = '<div style="grid-column:span 4; text-align:center;">No rooms found via DOM</div>';
+            });
+        }
+        function toggleDND(roomNum, btn) {
+            const fd = new FormData(); fd.append('room_number', roomNum);
+            fetch('/dnd/toggle/', { method:'POST', body:fd, headers:{'X-CSRFToken':getCookie('csrftoken')} })
+            .then(r => r.json()).then(d => {
+                if(d.success) {
+                    const isActive = d.action === 'added';
+                    btn.style.background = isActive ? '#ff4444' : 'var(--input-bg)';
+                    btn.style.borderColor = isActive ? '#ff4444' : 'var(--glass-border)';
+                    btn.style.color = isActive ? 'white' : 'var(--text-color)';
+                    document.querySelectorAll('.set-body').forEach(el => loadSet(el.closest('.widget-content')));
+                }
+            });
+        }
+
+        function startNotifyAutoRefresh(el) { loadNotifications(el); widgetIntervals.set(el, setInterval(() => loadNotifications(el), 5000)); }
+        function loadNotifications(el) {
+            const list = el.querySelector('.notify-list');
+            fetch(`/notify/api/queue/?t=${Date.now()}`).then(r=>r.json()).then(d => {
+                const q = d.queue || [];
+                list.innerHTML = q.length ? '' : '<div style="text-align:center; padding:20px; opacity:0.5;">No unread messages</div>';
+                q.forEach((n, i) => {
+                    const isFirst = i === 0;
+                    const bg = isFirst ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.02)';
+                    const border = isFirst ? '2px solid var(--accent-color)' : '1px solid rgba(255,255,255,0.1)';
+                    const icon = n.priority === 'Urgent' ? '🔴' : '🔵';
+                    list.insertAdjacentHTML('beforeend', `<div style="padding:10px; border-radius:6px; background:${bg}; border:${border}; display:flex; gap:10px; align-items:center;"><div style="font-size:1.2rem;">${icon}</div><div style="flex:1;"><div style="font-weight:600; font-size:0.9rem;">${n.message}</div><div style="font-size:0.75rem; opacity:0.6;">${n.time} • ${n.priority}</div></div>${isFirst ? '<div style="font-size:0.7rem; font-weight:bold; color:var(--accent-color);">NEXT</div>' : ''}</div>`);
+                });
+            });
+        }
+        function openNotifyModal() { document.getElementById('notifyModal').style.display='flex'; }
+        function submitNotification(e) { e.preventDefault(); fetch('/notify/add/', { method:'POST', body:new FormData(e.target), headers:{'X-CSRFToken':getCookie('csrftoken')} }).then(r=>r.json()).then(d => { if(d.success) { document.getElementById('notifyModal').style.display='none'; e.target.reset(); showNotification('Alert Sent'); refreshNotifyWidgets(); } }); }
+        function readNextNotification(btn) { fetch('/notify/pop/', { method:'POST', headers:{'X-CSRFToken':getCookie('csrftoken')} }).then(r=>r.json()).then(d => { if(d.success) { alert(`📨 Message Read:\n\n"${d.message}"`); refreshNotifyWidgets(); } else { showNotification('Queue Empty'); } }); }
+        function refreshNotifyWidgets() { document.querySelectorAll('.notify-body').forEach(el => loadNotifications(el.closest('.widget-content'))); document.querySelectorAll('.log-body').forEach(el => loadLogs(el.closest('.widget-content'))); }
+
+        function startLogAutoRefresh(el) { loadLogs(el); widgetIntervals.set(el, setInterval(() => loadLogs(el), 5000)); }
+        function loadLogs(el) {
+            const list = el.querySelector('.log-list');
+            fetch(`/logs/api/?t=${Date.now()}`).then(r=>r.json()).then(d => {
+                const logs = d.logs || [];
+                list.innerHTML = '';
+                logs.forEach(l => { list.insertAdjacentHTML('beforeend', `<div style="border-bottom:1px dashed #333; padding:4px 0; font-family:'Courier New', monospace;"><span style="opacity:0.5;">[${l.time}]</span> ${l.action}</div>`); });
+            });
+        }
+
+        function performMapLookup(e) {
+            e.preventDefault(); const resultDiv = e.target.closest('.widget-body').querySelector('.map-result'); const errorDiv = e.target.closest('.widget-body').querySelector('.map-error');
+            resultDiv.style.display = 'none'; errorDiv.style.display = 'none';
+            fetch('/map/lookup/', { method:'POST', body:new FormData(e.target), headers:{'X-CSRFToken':getCookie('csrftoken')} }).then(r => r.json()).then(d => {
+                if(d.found) { resultDiv.querySelector('.result-name').textContent = d.guest; resultDiv.querySelector('.result-type').textContent = d.type; resultDiv.style.display = 'block'; resultDiv.style.animation = 'fadeIn 0.5s'; } else { errorDiv.textContent = d.message; errorDiv.style.display = 'block'; }
+            }).catch(err => { errorDiv.textContent = "System Error"; errorDiv.style.display = 'block'; });
+        }
+
+        function startLinkedListAutoRefresh(el) { loadLinkedList(el); widgetIntervals.set(el, setInterval(() => loadLinkedList(el), 10000)); }
+        function loadLinkedList(el) {
+            const c = el.querySelector('.route-container');
+            fetch(`/route/api/linkedlist/?t=${Date.now()}`).then(r => r.json()).then(d => {
+                const route = d.route || [];
+                if (route.length === 0) {
+                    c.innerHTML = `<div style="text-align:center; padding:30px 20px; animation:fadeIn 0.5s;"><div style="font-size:3rem; margin-bottom:10px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">✨</div><div style="color:#00C851; font-weight:800; margin-bottom:20px; font-size:1.1rem;">All Rooms Cleaned!</div><button onclick="startCleaningDay()" style="background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)); color: white; border: none; padding: 12px 24px; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(255, 136, 0, 0.3); transition: transform 0.2s; display: inline-flex; align-items: center; gap: 8px;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><span>☀️</span> Start New Day</button></div>`;
+                    return;
+                }
+                c.innerHTML = '';
+                route.forEach((obj, i) => {
+                    const isHead = i === 0; const isTail = i === route.length - 1;
+                    const border = isHead ? '2px solid #00C851' : '2px solid var(--accent-color)';
+                    const bg = isHead ? 'rgba(0,200,81,0.1)' : 'rgba(255,255,255,0.05)';
+                    const label = isHead ? ' <small style="color:#00C851; font-weight:900;">(HEAD)</small>' : '';
+                    const html = `<div class="node-item" style="display:flex;flex-direction:column;align-items:center;width:100%;"><div style="display:flex;justify-content:space-between;align-items:center;border: ${border}; background: ${bg}; padding: 12px 20px; border-radius: 12px; width: 85%; font-weight:bold; margin-bottom:5px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);"><div>Room ${obj.number} ${label}</div><button onclick="cleanRoomAction(${obj.id}, this)" style="border:none; background:var(--accent-color); color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" title="Mark Clean">✓</button></div>${!isTail ? '<div style="font-size:1.5rem; opacity:0.3; color:var(--text-color);">⬇</div>' : '<div style="font-size:0.8rem; opacity:0.4; margin-top:5px; font-family:monospace;">NULL</div>'}</div>`;
+                    c.insertAdjacentHTML('beforeend', html);
+                });
+            });
+        }
+        function cleanRoomAction(id, btn) {
+            const node = btn.closest('.node-item'); node.style.opacity = '0'; const fd = new FormData(); fd.append('room_id', id);
+            fetch('/route/clean/', { method: 'POST', body: fd, headers: { 'X-CSRFToken': getCookie('csrftoken') } }).then(r => r.json()).then(d => { if(d.success) { showNotification('Room Cleaned'); setTimeout(refreshRoutes, 300); } else { node.style.opacity = '1'; alert('Error: ' + (d.error || 'Unknown')); } });
+        }
+        function startCleaningDay() {
+            if(confirm("Start Housekeeping Day?\nThis will set ALL rooms to 'Cleaning' state.")) { fetch('/route/start-day/', { method:'POST', headers:{'X-CSRFToken':getCookie('csrftoken')} }).then(r=>r.json()).then(d=>{ if(d.success){ showNotification('Morning Route Created'); refreshRoutes(); } }); }
+        }
+        function openWaitlistModal(){document.getElementById('waitlistModal').style.display='flex';}
+        function submitWaitlist(e){ e.preventDefault(); fetch('/waitlist/add/',{method:'POST',body:new FormData(e.target),headers:{'X-CSRFToken':getCookie('csrftoken')}}).then(r=>r.json()).then(d=>{if(d.success){document.getElementById('waitlistModal').style.display='none';e.target.reset();showNotification('Added');document.querySelectorAll('.waitlist-body').forEach(w=>loadWaitlist(w.closest('.widget-content')));}}); }
+        function startWaitlistAutoRefresh(el){loadWaitlist(el); widgetIntervals.set(el,setInterval(()=>loadWaitlist(el),15000));}
+        function loadWaitlist(el){
+            const l=el.querySelector('.waitlist-list');
+            fetch(`/waitlist/api/queue/?t=${Date.now()}`).then(r=>r.json()).then(d=>{
+                const q=d.queue||[]; l.innerHTML=q.length?'':'<div style="text-align:center;padding:10px;color:#aaa;">Empty</div>';
+                q.forEach(i=>{
+                    const html=`<div style="display:grid;grid-template-columns:2fr 1fr 1fr;align-items:center;padding:8px;border-radius:6px;background:${i.pos===1?'rgba(0,200,81,0.1)':'rgba(255,255,255,0.05)'};border-left:3px solid ${i.pos===1?'#00C851':'transparent'};margin-bottom:5px;font-size:0.85rem;"><div><b>#${i.pos}</b> ${i.guest_name}</div><div>${i.room_type}</div><div style="text-align:right;opacity:0.6;">${i.timestamp}</div></div>`;
+                    l.insertAdjacentHTML('beforeend',html);
+                });
+            });
+        }
+        function popWaitlistGuest(){ fetch('/waitlist/pop/',{method:'POST',headers:{'X-CSRFToken':getCookie('csrftoken')}}).then(r=>r.json()).then(d=>{if(d.success){alert(`Call: ${d.guest}`); document.querySelectorAll('.waitlist-body').forEach(w=>loadWaitlist(w.closest('.widget-content')));}else showNotification('Empty');}); }
+
+        let searchTimeout;
+        function performGuestSearch(input) {
+            const query = input.value; const list = input.closest('.widget-body').querySelector('.search-results'); clearTimeout(searchTimeout);
+            if(query.length < 2) { list.innerHTML = '<div style="text-align:center; padding:20px; color:#aaa;">Type at least 2 chars</div>'; return; }
+            list.innerHTML = '<div style="text-align:center; padding:10px; opacity:0.7;">Running Algorithm...</div>';
+            searchTimeout = setTimeout(() => {
+                const fd = new FormData(); fd.append('query', query);
+                fetch('/search/api/algo/', { method:'POST', body:fd, headers:{'X-CSRFToken':getCookie('csrftoken')} }).then(r => r.json()).then(d => {
+                    const results = d.results || [];
+                    if(results.length === 0) { list.innerHTML = '<div style="text-align:center; padding:10px; color:#ff4444;">No matches found</div>'; return; }
+                    list.innerHTML = '';
+                    results.forEach(res => {
+                        let color = '#aaa'; if(res.status === 'In-House') color = '#00C851'; if(res.status === 'Active') color = 'var(--accent-color)';
+                        const html = `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px; border-left:3px solid ${color}; animation: fadeIn 0.3s;"><div><div style="font-weight:bold;">${res.guest}</div><div style="font-size:0.8rem; opacity:0.7;">Room ${res.room} • ${res.date}</div></div><div style="text-align:right;"><div style="font-size:0.7rem; font-weight:bold; color:${color}; text-transform:uppercase;">${res.status}</div></div></div>`;
+                        list.insertAdjacentHTML('beforeend', html);
+                    });
+                });
+            }, 500);
+        }
+
+        function startRoomsAutoRefresh(el) { refreshRoomsUI(); widgetIntervals.set(el, setInterval(() => refreshRoomsUI(), 5000)); }
+        function refreshRoomsUI() {
+            if (!document.querySelector('.rooms-list')) return;
+            fetch(`/rooms/api/status/?t=${Date.now()}`).then(r => r.json()).then(d => {
+                d.rooms.forEach(room => {
+                    const item = document.getElementById(`room-item-${room.id}`);
+                    if (item) {
+                        const select = item.querySelector('.status-select');
+                        if (select && select.value !== room.state) { select.value = room.state; select.className = `status-select ${room.state}`; }
+                        const dateSpan = document.getElementById(`date-info-${room.id}`);
+                        if (dateSpan) dateSpan.textContent = room.date_info;
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode'); 
+            loadLayout(); 
+
+            const topBar = document.querySelector('.top-control-bar');
+            const palette = document.getElementById('globalColorPalette');
+            let hideTimeout;
+
+            if(topBar) {
+                topBar.classList.add('visible'); 
+                document.body.classList.add('bar-visible');
+                setTimeout(() => { 
+                    if (palette && !palette.classList.contains('active')) {
+                        topBar.classList.remove('visible'); 
+                        document.body.classList.remove('bar-visible'); 
+                    }
+                }, 3000);
+
+                document.addEventListener('mousemove', (e) => {
+                    if (e.clientY <= 80) { 
+                        topBar.classList.add('visible'); 
+                        document.body.classList.add('bar-visible'); 
+                        clearTimeout(hideTimeout); 
+                    } 
+                    else if (e.clientY > 120) { 
+                        hideTimeout = setTimeout(() => { 
+                            if (palette && !palette.classList.contains('active')) { 
+                                topBar.classList.remove('visible'); 
+                                document.body.classList.remove('bar-visible'); 
+                            } 
+                        }, 800); 
+                    }
+                });
+            }
+        });
+
+        document.addEventListener('click', e => { 
+            const palette = document.getElementById('globalColorPalette');
+            const colorBtn = document.querySelector('.color-settings-btn');
+            if(palette && colorBtn && !palette.contains(e.target) && !colorBtn.contains(e.target)) {
+                palette.classList.remove('active');
+            }
+            if(e.target.classList.contains('modal')) e.target.style.display='none'; 
+        });
+    </script>
+</body>
+</html>
